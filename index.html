@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Swiggy Clone - Order Food Online</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">swiggy<span style="color:#282c3f">clone</span></div>
+    <div class="header-actions">
+      <a href="cart.html" class="cart-link">
+        Cart
+        <span id="cartBadge" class="cart-badge" style="display:none;">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search for restaurants or cuisines..." />
+</div>
+
+<div class="section-title">Restaurants near you</div>
+<div id="restaurantGrid" class="restaurant-grid"></div>
+<div id="loadingMsg" class="loading">Loading restaurants...</div>
+<div id="emptyMsg" class="empty-state" style="display:none;">No restaurants found. Try a different search.</div>
+
+<script src="js/common.js"></script>
+<script>
+  const grid = document.getElementById('restaurantGrid');
+  const loadingMsg = document.getElementById('loadingMsg');
+  const emptyMsg = document.getElementById('emptyMsg');
+  const searchInput = document.getElementById('searchInput');
+
+  let debounceTimer;
+
+  async function loadRestaurants(query = '') {
+    loadingMsg.style.display = 'block';
+    emptyMsg.style.display = 'none';
+    grid.innerHTML = '';
+
+    try {
+      const url = query
+        ? `${API_BASE}/restaurants?search=${encodeURIComponent(query)}`
+        : `${API_BASE}/restaurants`;
+      const res = await fetch(url);
+      const restaurants = await res.json();
+
+      loadingMsg.style.display = 'none';
+
+      if (restaurants.length === 0) {
+        emptyMsg.style.display = 'block';
+        return;
+      }
+
+      restaurants.forEach((r) => {
+        const card = document.createElement('a');
+        card.href = `restaurant.html?id=${r.id}`;
+        card.className = 'restaurant-card';
+        card.innerHTML = `
+          <img src="${r.image}" alt="${r.name}" />
+          <div class="restaurant-card-body">
+            <h3>${r.name}</h3>
+            <div class="restaurant-meta">
+              <span class="rating-pill">★ ${r.rating}</span>
+              <span>${r.deliveryTime}</span>
+            </div>
+            <div class="cuisine-text">${r.cuisine}</div>
+            <div class="cuisine-text">₹${r.priceForTwo} for two</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    } catch (err) {
+      loadingMsg.style.display = 'none';
+      grid.innerHTML = `<div class="error-text">Could not load restaurants. Is the backend server running at ${API_BASE}?</div>`;
+      console.error(err);
+    }
+  }
+
+  searchInput.addEventListener('input', (e) => {
+    clearTimeout(debounceTimer);
+    const value = e.target.value;
+    debounceTimer = setTimeout(() => loadRestaurants(value), 300);
+  });
+
+  loadRestaurants();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Order Placed - Swiggy Clone</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">swiggy<span style="color:#282c3f">clone</span></a>
+    <div class="header-actions">
+      <a href="cart.html" class="cart-link">
+        Cart
+        <span id="cartBadge" class="cart-badge" style="display:none;">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="order-success">
+  <div class="checkmark">✓</div>
+  <h2>Order Placed Successfully!</h2>
+  <p id="orderDetails">Fetching your order details...</p>
+  <a href="index.html"><button class="back-home-btn">Back to Restaurants</button></a>
+</div>
+
+<script src="js/common.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get('orderId');
+  const orderDetails = document.getElementById('orderDetails');
+
+  async function loadOrder() {
+    if (!orderId) {
+      orderDetails.textContent = 'Thank you for your order!';
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/orders/${orderId}`);
+      if (!res.ok) throw new Error('Order not found');
+      const order = await res.json();
+
+      orderDetails.innerHTML = `
+        Your order <strong>#${order.id}</strong> from <strong>${order.restaurantName}</strong>
+        has been placed for <strong>₹${order.grandTotal}</strong>.<br/>
+        It will be delivered to: ${order.address}
+      `;
+    } catch (err) {
+      orderDetails.textContent = 'Thank you for your order!';
+      console.error(err);
+    }
+  }
+
+  loadOrder();
+</script>
+
+</body>
+</html>

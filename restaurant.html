@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Menu - Swiggy Clone</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">swiggy<span style="color:#282c3f">clone</span></a>
+    <div class="header-actions">
+      <a href="cart.html" class="cart-link">
+        Cart
+        <span id="cartBadge" class="cart-badge" style="display:none;">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div id="restaurantBanner" class="restaurant-banner">
+  <div class="restaurant-banner-inner">
+    <h1 id="restaurantName">Loading...</h1>
+    <div class="cuisine-text" id="restaurantMeta"></div>
+  </div>
+</div>
+
+<div id="menuList" class="menu-list"></div>
+<div id="loadingMsg" class="loading">Loading menu...</div>
+<div id="errorMsg" class="error-text" style="display:none;"></div>
+
+<div id="cartFloatingBar" class="cart-floating-bar" style="display:none;" onclick="window.location.href='cart.html'">
+  <span id="cartFloatingText">0 items</span>
+  <span>View Cart →</span>
+</div>
+
+<script src="js/common.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const restaurantId = parseInt(params.get('id'), 10);
+
+  const menuList = document.getElementById('menuList');
+  const loadingMsg = document.getElementById('loadingMsg');
+  const errorMsg = document.getElementById('errorMsg');
+  const cartFloatingBar = document.getElementById('cartFloatingBar');
+  const cartFloatingText = document.getElementById('cartFloatingText');
+
+  let restaurant = null;
+
+  function vegDotHtml(isVeg) {
+    return `<span class="veg-dot ${isVeg ? '' : 'non-veg-dot'}"></span>`;
+  }
+
+  function renderMenuItem(item) {
+    const qty = getItemQuantity(item.id);
+    const row = document.createElement('div');
+    row.className = 'menu-item';
+    row.id = `menu-item-${item.id}`;
+    row.innerHTML = `
+      <div class="menu-item-info">
+        <div class="menu-item-name">${vegDotHtml(item.veg)}${item.name}</div>
+        <div class="menu-item-price">₹${item.price}</div>
+        <div class="menu-item-desc">${item.description}</div>
+      </div>
+      <div class="menu-item-action">
+        ${qty > 0 ? qtyControlHtml(item.id, qty) : `<button class="add-btn" onclick="handleAdd(${item.id})">ADD</button>`}
+      </div>
+    `;
+    return row;
+  }
+
+  function qtyControlHtml(itemId, qty) {
+    return `
+      <div class="qty-control">
+        <button onclick="handleRemove(${itemId})">−</button>
+        <span>${qty}</span>
+        <button onclick="handleAdd(${itemId})">+</button>
+      </div>
+    `;
+  }
+
+  function refreshItemRow(itemId) {
+    const item = restaurant.menu.find((m) => m.id === itemId);
+    const row = document.getElementById(`menu-item-${itemId}`);
+    if (row && item) {
+      row.replaceWith(renderMenuItem(item));
+    }
+    updateCartBadge();
+    updateFloatingBar();
+  }
+
+  function handleAdd(itemId) {
+    const item = restaurant.menu.find((m) => m.id === itemId);
+    addToCart(restaurant.id, restaurant.name, {
+      id: item.id,
+      name: item.name,
+      price: item.price,
+    });
+    refreshItemRow(itemId);
+  }
+
+  function handleRemove(itemId) {
+    removeFromCart(itemId);
+    refreshItemRow(itemId);
+  }
+
+  function updateFloatingBar() {
+    const cart = getCart();
+    if (cart && cart.restaurantId === restaurant.id && cart.items.length > 0) {
+      const count = cartItemCount();
+      cartFloatingText.textContent = `${count} item${count > 1 ? 's' : ''} | ₹${cartTotal()}`;
+      cartFloatingBar.style.display = 'flex';
+    } else {
+      cartFloatingBar.style.display = 'none';
+    }
+  }
+
+  async function loadRestaurant() {
+    if (!restaurantId) {
+      loadingMsg.style.display = 'none';
+      errorMsg.textContent = 'No restaurant selected.';
+      errorMsg.style.display = 'block';
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/restaurants/${restaurantId}`);
+      if (!res.ok) throw new Error('Restaurant not found');
+      restaurant = await res.json();
+
+      document.title = `${restaurant.name} - Swiggy Clone`;
+      document.getElementById('restaurantName').textContent = restaurant.name;
+      document.getElementById('restaurantMeta').textContent =
+        `${restaurant.cuisine} · ★ ${restaurant.rating} · ${restaurant.deliveryTime} · ₹${restaurant.priceForTwo} for two`;
+
+      loadingMsg.style.display = 'none';
+      restaurant.menu.forEach((item) => menuList.appendChild(renderMenuItem(item)));
+      updateFloatingBar();
+    } catch (err) {
+      loadingMsg.style.display = 'none';
+      errorMsg.textContent = `Could not load restaurant. Is the backend server running at ${API_BASE}?`;
+      errorMsg.style.display = 'block';
+      console.error(err);
+    }
+  }
+
+  loadRestaurant();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+[
+  {
+    "id": 1,
+    "name": "Spice Villa",
+    "cuisine": "North Indian, Mughlai",
+    "rating": 4.3,
+    "deliveryTime": "30-35 mins",
+    "priceForTwo": 400,
+    "image": "https://placehold.co/400x250?text=Spice+Villa",
+    "menu": [
+      { "id": 101, "name": "Butter Chicken", "price": 320, "veg": false, "description": "Creamy tomato based chicken curry" },
+      { "id": 102, "name": "Paneer Tikka", "price": 260, "veg": true, "description": "Grilled cottage cheese cubes" },
+      { "id": 103, "name": "Dal Makhani", "price": 220, "veg": true, "description": "Slow cooked black lentils" },
+      { "id": 104, "name": "Butter Naan", "price": 50, "veg": true, "description": "Soft leavened bread" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Pizza Planet",
+    "cuisine": "Italian, Pizza",
+    "rating": 4.1,
+    "deliveryTime": "25-30 mins",
+    "priceForTwo": 500,
+    "image": "https://placehold.co/400x250?text=Pizza+Planet",
+    "menu": [
+      { "id": 201, "name": "Margherita Pizza", "price": 249, "veg": true, "description": "Classic cheese and tomato pizza" },
+      { "id": 202, "name": "Pepperoni Pizza", "price": 349, "veg": false, "description": "Loaded with pepperoni and cheese" },
+      { "id": 203, "name": "Garlic Bread", "price": 129, "veg": true, "description": "Crispy bread with garlic butter" },
+      { "id": 204, "name": "Pasta Alfredo", "price": 229, "veg": true, "description": "Creamy white sauce pasta" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Dragon Wok",
+    "cuisine": "Chinese, Asian",
+    "rating": 4.0,
+    "deliveryTime": "35-40 mins",
+    "priceForTwo": 350,
+    "image": "https://placehold.co/400x250?text=Dragon+Wok",
+    "menu": [
+      { "id": 301, "name": "Veg Hakka Noodles", "price": 180, "veg": true, "description": "Stir fried noodles with vegetables" },
+      { "id": 302, "name": "Chicken Manchurian", "price": 240, "veg": false, "description": "Chicken balls in tangy sauce" },
+      { "id": 303, "name": "Spring Rolls", "price": 150, "veg": true, "description": "Crispy vegetable rolls" },
+      { "id": 304, "name": "Fried Rice", "price": 170, "veg": true, "description": "Wok tossed rice with veggies" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Burger Barn",
+    "cuisine": "American, Fast Food",
+    "rating": 4.2,
+    "deliveryTime": "20-25 mins",
+    "priceForTwo": 300,
+    "image": "https://placehold.co/400x250?text=Burger+Barn",
+    "menu": [
+      { "id": 401, "name": "Classic Cheeseburger", "price": 180, "veg": false, "description": "Beef patty with cheese and veggies" },
+      { "id": 402, "name": "Veggie Burger", "price": 150, "veg": true, "description": "Crispy veg patty burger" },
+      { "id": 403, "name": "French Fries", "price": 99, "veg": true, "description": "Crispy golden fries" },
+      { "id": 404, "name": "Cold Coffee", "price": 120, "veg": true, "description": "Chilled coffee shake" }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Sushi Sensation",
+    "cuisine": "Japanese, Sushi",
+    "rating": 4.5,
+    "deliveryTime": "40-45 mins",
+    "priceForTwo": 700,
+    "image": "https://placehold.co/400x250?text=Sushi+Sensation",
+    "menu": [
+      { "id": 501, "name": "California Roll", "price": 350, "veg": false, "description": "Crab, avocado and cucumber roll" },
+      { "id": 502, "name": "Veg Tempura Roll", "price": 300, "veg": true, "description": "Crispy vegetable tempura roll" },
+      { "id": 503, "name": "Miso Soup", "price": 150, "veg": true, "description": "Traditional Japanese soup" },
+      { "id": 504, "name": "Salmon Nigiri", "price": 400, "veg": false, "description": "Fresh salmon over rice" }
+    ]
+  }
+]
